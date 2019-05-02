@@ -10,13 +10,15 @@ const PORT = process.env.PORT || 3001;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//accessing the index.html
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-//Getting all the routes; index.js, api folder (books.js, google.js)
+//accessing the routes folder and referencing the index.js inside of it
 app.use(routes);
 
+//creating the database
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/googlebooks",
   {

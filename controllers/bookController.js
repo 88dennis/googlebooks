@@ -1,6 +1,9 @@
 const db = require("../models");
 
+  //these methods will access the database
+
 module.exports = {
+  //find all in collections Books, this function activates on pageload of the /saved link
   findAll: function(req, res) {
     db.Book.find(req.query)
       .then(dbBook => res.json(dbBook))

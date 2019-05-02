@@ -8,6 +8,8 @@ import API from "../utils/API";
 import { Col, Row, Container } from "../components/Grid";
 import { List } from "../components/List";
 
+//setting the state of the Home page
+//books is an array where you populate data in upon input in the search bar using the getBooks method during an onClick
 class Home extends Component {
   state = {
     books: [],
@@ -15,6 +17,8 @@ class Home extends Component {
     message: "Search For A Book To Begin!"
   };
 
+  //this handles the text you type inside the search input field in the form component
+  //you pass this property also into the form component
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
@@ -22,6 +26,8 @@ class Home extends Component {
     });
   };
 
+//this method is getting the data from the google API via the input field and what you query
+//this will be called by the handleFormSubmit to search the google API and check if the query you typed exists in there; if it exists, it will send data back and updates our books array and displays it accordingly using the List component below in the render; if it does not exist in the google API, it will throw an error and just set the state again to an empty array
   getBooks = () => {
     API.getBooks(this.state.q)
       .then(res =>
@@ -36,15 +42,21 @@ class Home extends Component {
         })
       );
   };
-
+//this is the the property you pass in to the onClick function in the form component to execute your query; this triggers your getBooks method
+//this gets the value of what you typed in the input field
   handleFormSubmit = event => {
     event.preventDefault();
     this.getBooks();
   };
 
+  //this handleBookSave is the property you pass in to the save button
+  //this will do a post method as defined in the API.js in utils folder
+  //this will post the data with this specific id you clicked on and save it in the database
+  //onClick -> utils/API.js (feeds saveBook post method)->  routes/ api/ .post(bookController.create) -> controllers/ bookController.js (create: function)
+  //then will do a getBook method again to update the page and filters it if the database includes that book, dont show it in the page anymore
   handleBookSave = id => {
     const book = this.state.books.find(book => book.id === id);
-
+// this is the data structure we feed in to the database based on its id. this saved book is not being rendered in this page
     API.saveBook({
       googleId: book.id,
       title: book.volumeInfo.title,
@@ -55,7 +67,7 @@ class Home extends Component {
       image: book.volumeInfo.imageLinks.thumbnail
     }).then(() => this.getBooks());
   };
-
+//renders the home page
   render() {
     return (
       <Container>
